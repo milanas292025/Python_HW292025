@@ -3,22 +3,6 @@ from string_ulits import StringUtils
 
 string_ulits = StringUtils()
 
-
-@pytest.mark.parametrize(["imput_data", "expected_data"], [("1hello", "1hello"), ("", ""), ("R", "R")])
-def test_capitalize_negativ(self, imput_data: str, expected_data: str):
-        res = string_ulits.capitalize(string=imput_data)
-        assert res == expected_data
-
-@pytest.mark.parametrize(["imput_data", "simbol" "expected"], [("hello", "e", True), (" 123", " ", True), ("RER", "R", True)])
-def test_contains_positiv(self, imput_data: str, simbol: str, expected: bool):
-        res = string_ulits.contains(string=imput_data, symbol=simbol)
-        assert res == expected
-
-@pytest.mark.parametrize(["imput_data", "simbol" "expected"], [("hello", "e", True), ("Flai", "F", True), ("Test", "T", True)])
-def test_delete_simbol_positiv(self, imput_data: str, simbol: str, expected: bool):
-        res = string_ulits.delete_simbol(string=imput_data, symbol=simbol)
-        assert res == expected
-
 @pytest.mark.positive
 @pytest.mark.parametrize("input_str, expected", [
     ("skypro", "Skypro"),
@@ -29,17 +13,67 @@ def test_capitalize_positive(input_str, expected):
     assert string_ulits.capitalize(input_str) == expected
 
 @pytest.mark.negative
-@pytest.mark.parametrize("input_str, expected", [
-    ("123abc", "123abc"),
+@pytest.mark.parametrize(["input_data", "expected_data"], [
+    ("1hello", "1hello"),
     ("", ""),
-    ("   ", "   "),
+    (" ", " ")
 ])
-def test_capitalize_negative(input_str, expected):
-    assert string_ulits.capitalize(input_str) == expected
+def test_capitalize_negative(input_data, expected_data):
+        assert string_ulits.capitalize(input_data) == expected_data
 
 
-def test_delete_symbol_from_list_positive(utils, input_list, symbol, expected_output_list):
-    result = [utils.delete_symbol(string, symbol) for string in input_list]
-    assert result == expected_output_list
+@pytest.mark.positive
+@pytest.mark.parametrize(["input_data", "expected"], [
+    ("hello", "e"),
+    (" 123", " "),
+    ("RER", "R")
+])
+def test_contains_positive(input_data, expected):
+        assert string_ulits.contains(input_data, expected) == expected
+
+@pytest.mark.negative
+@pytest.mark.parametrize(["input_data", "expected"], [
+    ("hello", "a"),
+    (" 123", "R"),
+    ("RER", "12")
+])
+def test_contains_negative(input_data, expected):
+        assert not string_ulits.contains(input_data, expected) == expected
 
 
+@pytest.mark.positive
+@pytest.mark.parametrize(["input_data", "expected"], [
+    (" hello", "hello"),
+    (" 123", "123"),
+    (" RER", "RER")
+])
+def test_trim_positive(input_data, expected):
+    assert string_ulits.contains(input_data, expected) == expected
+
+@pytest.mark.negative
+@pytest.mark.parametrize(["input_data", "expected"], [
+    ("hello", "hello"),
+    ("123", "123"),
+    ("RER", "RER")
+])
+def test_trim_negative(input_data, expected):
+    assert string_ulits.contains(input_data, expected) == expected
+
+
+@pytest.mark.positive
+@pytest.mark.parametrize(["input_data", "expected"], [
+    ("hello", "e"),
+    ("Test", "T"),
+    ("skip", "i")
+])
+def test_delete_simbol_positive(input_data, expected):
+        assert string_ulits.delete_symbol(input_data, expected)
+
+@pytest.mark.negative
+@pytest.mark.parametrize(["input_data", "expected"], [
+    ("hello", "r"),
+    ("Test", "7"),
+    ("skip", " ")
+])
+def test_delete_symbol_from_list_negative(input_data, expected):
+        assert string_ulits.delete_symbol(input_data, expected)
