@@ -1,16 +1,33 @@
-from time import sleep
-from tkinter import By
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service as ChromeService
-from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.common.by import By
+import time
 
-driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
 
-driver.get("http://www.uitestingplayground.com/dynamicid")
+driver = webdriver.Chrome()
 
-driver.find_element(By.LINK_TEXT,"Button with Dynamic ID").click()
-element_clik Button color="Blue"    # не знаю, как обозначить синюю кнопку
 
-driver.quit()
+def test_dynamic_id():
+    try:
 
-sleep(10)
+        driver.get('http://uitestingplayground.com/dynamicid')
+
+        button = driver.find_element(By.CSS_SELECTOR, '.btn.btn-primary')
+        button.click()
+
+        time.sleep(2)
+
+        print("Тест успешно пройден!")
+    except Exception as e:
+        print(f"Произошла ошибка: {e}")
+    finally:
+        pass
+
+
+if __name__ == "__main__":
+
+    for i in range(3):
+        print(f"Тест №{i + 1}:")
+        test_dynamic_id()
+        time.sleep(1)
+
+    driver.quit()

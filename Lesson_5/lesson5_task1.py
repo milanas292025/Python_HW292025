@@ -1,16 +1,18 @@
 from time import sleep
-from tkinter import By
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service as ChromeService
-from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.common.by import By
+import time
 
-driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
+options = webdriver.ChromeOptions()
+driver = webdriver.Chrome(options=options)
 
 driver.get("http://uitestingplayground.com/classattr")
 
-driver.find_element(By.LINK_TEXT,"Button").click()
-element_clik Button color="Blue"   # не знаю, как обозначить синюю кнопку
+button = driver.find_element(By.CLASS_NAME, 'btn-primary')
+
+for _ in range(3):
+        button.click()
+        print("Нажата кнопка.")
+        time.sleep(1)
 
 driver.quit()
-
-sleep(10)
