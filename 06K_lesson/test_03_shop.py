@@ -1,58 +1,54 @@
+import pytest
 from selenium import webdriver
-from selenium.webdriver.firefox.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-driver = webdriver.Firefox()
+@pytest.fixture
+def driver():
+    driver = webdriver.Firefox()
+    driver.maximize_window()
+    yield driver
+    driver.quit()
 
-USERNAME = 'standard_user'
-PASSWORD = 'secret_sauce'
+def test_saucedemo(driver):
+    driver.get("https://www.saucedemo.com/")
 
-FIRST_NAME = 'Lana'
-LAST_NAME = 'Serebro'
-POSTAL_CODE = '624074'
+    USERNAME = 'standard_user'
+    PASSWORD = 'secret_sauce'
 
-service = Service(driver)
-driver = webdriver.Firefox(service=service)
-wait = WebDriverWait(driver, 10)
+    FIRST_NAME = 'Lana'
+    LAST_NAME = 'Serebro'
+    POSTAL_CODE = '624074'
 
-driver.get('https://www.saucedemo.com/')
+    username_field = driver.find_element(By.ID, 'user-name')
+    password_field = driver.find_element(By.ID, 'password')
+    login_button = driver.find_element(By.ID, 'login-button')
 
+    username_field.send_keys(USERNAME)
+    password_field.send_keys(PASSWORD)
+    login_button.click()
 
-username_field = driver.find_element(By.ID, 'user-name')
-password_field = driver.find_element(By.ID, 'password')
-login_button = driver.find_element(By.ID, 'login-button')
+    items = ['Sauce Labs Backpack', 'Sauce Labs Bolt T-Shirt', 'Sauce Labs Onesie']
+    for item in items:
+        add_to_cart_btn = wait.until(EC.element_to_be_clickable((By.XPATH, f"//div[contains(text(), "f"'{item}')]/ancestor::div/div/button"))).click()
+        cart_link = driver.find_element(By.CLASS_NAME, 'shopping_cart_link').click()
+        checkout_button = wait.until(EC.element_to_be_clickable((By.ID, 'checkout'))).click()
 
-username_field.send_keys(USERNAME)
-password_field.send_keys(PASSWORD)
-login_button.click()
+    first_name_field = driver.find_element(By.ID, 'first-name')
+    last_name_field = driver.find_element(By.ID, 'last-name')
+    postal_code_field = driver.find_element(By.ID, 'postal-code')
+    continue_button = driver.find_element(By.ID, 'continue')
 
-items = ['Sauce Labs Backpack', 'Sauce Labs Bolt T-Shirt', 'Sauce Labs Onesie']
-for item in items:
-    add_to_cart_btn = wait.until(EC.element_to_be_clickable((By.XPATH, f"//div[contains(text(), '{item}')]/ancestor::div/div/button")))
-    add_to_cart_btn.click()
+    first_name_field.send_keys(FIRST_NAME)
+    last_name_field.send_keys(LAST_NAME)
+    postal_code_field.send_keys(POSTAL_CODE)
+    continue_button.click()
 
-cart_link = driver.find_element(By.CLASS_NAME, 'shopping_cart_link')
-cart_link.click()
+    total_amount = wait.until(EC.visibility_of_element_located((By.CLASS_NAME, 'summary_total_label'))).text.split(':')[1].strip()
 
-checkout_button = wait.until(EC.element_to_be_clickable((By.ID, 'checkout')))
-checkout_button.click()
+    assert total_amount == '$58.29', f"Итоговая сумма не совпадает, получено: {total_amount}, ожидается: $58.29"
 
-first_name_field = driver.find_element(By.ID, 'first-name')
-last_name_field = driver.find_element(By.ID, 'last-name')
-postal_code_field = driver.find_element(By.ID, 'postal-code')
-continue_button = driver.find_element(By.ID, 'continue')
+    print("Автотест успешно завершён!")
 
-first_name_field.send_keys(FIRST_NAME)
-last_name_field.send_keys(LAST_NAME)
-postal_code_field.send_keys(POSTAL_CODE)
-continue_button.click()
-
-total_amount = wait.until(EC.visibility_of_element_located((By.CLASS_NAME, 'summary_total_label'))).text.split(':')[1].strip()
-
-assert total_amount == '$58.29', f"Итоговая сумма не совпадает, получено: {total_amount}, ожидается: $58.29"
-
-print("Автотест успешно завершён!")
-
-driver.quit()
+    driver.quit()
