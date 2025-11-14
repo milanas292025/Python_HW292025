@@ -11,29 +11,33 @@ def driver():
     yield driver
     driver.quit()
 
+wait = WebDriverWait(driver, 10)
+
 def test_shop(driver):
     driver.get("https://www.saucedemo.com/")
 
-    USERNAME = 'standard_user'
-    PASSWORD = 'secret_sauce'
+element = wait.until(EC.presence_of_element_located((By.ID, "some-element")))
 
-    FIRST_NAME = 'Lana'
-    LAST_NAME = 'Serebro'
-    POSTAL_CODE = '624074'
+USERNAME = 'standard_user'
+PASSWORD = 'secret_sauce'
 
-    username_field = driver.find_element(By.ID, 'user-name')
-    password_field = driver.find_element(By.ID, 'password')
-    login_button = driver.find_element(By.ID, 'login-button')
+FIRST_NAME = 'Lana'
+LAST_NAME = 'Serebro'
+POSTAL_CODE = '624074'
 
-    username_field.send_keys(USERNAME)
-    password_field.send_keys(PASSWORD)
-    login_button.click()
+username_field = driver.find_element(By.ID, 'user-name')
+password_field = driver.find_element(By.ID, 'password')
+login_button = driver.find_element(By.ID, 'login-button')
 
-    items = ['Sauce Labs Backpack', 'Sauce Labs Bolt T-Shirt', 'Sauce Labs Onesie']
-    for item in items:
-        add_to_cart_btn = wait.until(EC.element_to_be_clickable((By.XPATH, f"//div[contains(text(), "f"'{item}')]/ancestor::div/div/button"))).click()
-        cart_link = driver.find_element(By.CLASS_NAME, 'shopping_cart_link').click()
-        checkout_button = wait.until(EC.element_to_be_clickable((By.ID, 'checkout'))).click()
+username_field.send_keys(USERNAME)
+password_field.send_keys(PASSWORD)
+login_button.click()
+
+items = ['Sauce Labs Backpack', 'Sauce Labs Bolt T-Shirt', 'Sauce Labs Onesie']
+for item in items:
+    add_to_cart_btn = wait.until(EC.element_to_be_clickable((By.XPATH, f"//div[contains(text(), "f"'{item}')]/ancestor::div/div/button"))).click()
+    cart_link = driver.find_element(By.CLASS_NAME, 'shopping_cart_link').click()
+    checkout_button = wait.until(EC.element_to_be_clickable((By.ID, 'checkout'))).click()
 
     first_name_field = driver.find_element(By.ID, 'first-name')
     last_name_field = driver.find_element(By.ID, 'last-name')
