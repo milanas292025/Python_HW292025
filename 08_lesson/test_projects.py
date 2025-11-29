@@ -1,7 +1,7 @@
 import pytest
 from utils import generate_random_project_data
 
-PROJECT_ID = None  # будет храниться ID проекта, созданного в тестах
+#PROJECT_ID = None  # будет храниться ID проекта, созданного в тестах
 
 def create_project(api_client):
     global PROJECT_ID
@@ -39,12 +39,12 @@ def test_get_project_positive(api_client):
 def test_create_project_negative_missing_required_field(api_client):
     payload = {}  # пустой словарь
     response = api_client.post(f"{BASE_URL}/api-v2/projects", json=payload)
-    assert response.status_code == 400 or response.status_code == 422  # зависимо от требований API
+    assert response.status_code == 400 #or response.status_code == 422  # зависимо от требований API
 
 def test_update_project_negative_wrong_type(api_client):
     wrong_payload = {"title": 123}  # неверный тип данных
     response = api_client.put(f"{BASE_URL}/api-v2/projects/{PROJECT_ID}", json=wrong_payload)
-    assert response.status_code == 400 or response.status_code == 422
+    assert response.status_code == 400 #or response.status_code == 422
 
 def test_get_nonexistent_project(api_client):
     non_existent_id = 999999  # заведомо несуществующий ID
